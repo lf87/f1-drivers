@@ -1,0 +1,35 @@
+{
+  "name": "gulp-barebones-boilerplate",
+  "version": "1.0.0",
+  "description": "A barebones boilerplate that uses Gulp as the build system.",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.home-trial.com/infrastructure/gulp-barebones-boilerplate.git"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.14.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-clean-css": "^2.0.12",
+    "gulp-concat": "^2.6.0",
+    "gulp-file-include": "^0.14.0",
+    "gulp-fontmin": "^0.7.4",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-jshint": "^2.0.1",
+    "gulp-newer": "^1.2.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-sass": "^2.3.2",
+    "gulp-scss-lint": "^0.4.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-svgmin": "^1.2.3",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "jshint": "^2.9.3",
+    "jshint-stylish": "^2.2.1",
+    "node-neat": "^1.7.2"
+  }
+}
