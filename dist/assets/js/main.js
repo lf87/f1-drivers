@@ -16,7 +16,7 @@
     'use strict';
 
     // Globals
-    var drivers;
+    var drivers, jsonData;
 
     // initialize XMLHttpRequest object
     var xhr = new XMLHttpRequest();
@@ -34,7 +34,6 @@
 
     //  event handler code that reads the result that gets returned
     function processRequest() {
-
         // Only fire when DONE and the request is SUCCESSFUL
         if (xhr.readyState === 4 && xhr.status === 200) {
 
@@ -42,60 +41,57 @@
             var response = JSON.parse(xhr.responseText);
 
             // Get desired JSON data
-            var jsonData = response.MRData.DriverTable.Drivers;
+            jsonData = response.MRData.DriverTable.Drivers;
             // Loop through each driver object
 
-            // Sorts the properties within the JSON object based on property value (asc/dec)
-            function sortResults(prop, asc) {
-                jsonData = jsonData.sort(function(a, b) {
-                    if (asc) {
-                        return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
-                    } else {
-                        return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
-                    }
-                });
-
-                // Clear DOM ready for re-ordering
-                document.getElementById('drivers').innerHTML = '';
-                sort();
-            }
-
             // The default sort order
-            sortResults('dateOfBirth', true);
-
-            // Iterate through all objects and append to DOM
-            function sort() {
-                for (var i = 0; i < jsonData.length; i++) {
-                    // The current object
-                    drivers = jsonData[i];
-
-                    document.getElementById('drivers').innerHTML += '<li>' + drivers.givenName + ' ' + drivers.familyName + '</li>';
-                }
-            }
-
-            // Assign even handlers and declare related functions
-            document.getElementById('sort-family-name').addEventListener('mouseup', sortFamilyName);
-
-            function sortFamilyName() {
-                sortResults('familyName', true);
-            }
-
-            document.getElementById('sort-given-name').addEventListener('mouseup', sortGivenName);
-
-            function sortGivenName() {
-                sortResults('givenName', true);
-            }
-
-            document.getElementById('sort-date-of-birth').addEventListener('mouseup', sortDateOfBirth);
-
-            function sortDateOfBirth() {
-                sortResults('dateOfBirth', false);
-            }
+            sort();
 
         }
     }
 
+    // Iterate through all objects and append to DOM
+    function sort() {
+        for (var i = 0; i < jsonData.length; i++) {
+            // The current object
+            drivers = jsonData[i];
 
+            document.getElementById('drivers').innerHTML += '<li>' + drivers.givenName + ' ' + drivers.familyName + '</li>';
+        }
+    }
 
+    // Sorts the properties within the JSON object based on property value (asc/dec)
+    function sortResults(prop, asc) {
+        jsonData = jsonData.sort(function(a, b) {
+            if (asc) {
+                return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+            } else {
+                return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+            }
+        });
+
+        // Clear DOM ready for re-ordering
+        document.getElementById('drivers').innerHTML = '';
+        sort();
+    }
+
+    // Assign even handlers and declare related functions
+    document.getElementById('sort-family-name').addEventListener('mouseup', sortFamilyName);
+
+    function sortFamilyName() {
+        sortResults('familyName', true);
+    }
+
+    document.getElementById('sort-given-name').addEventListener('mouseup', sortGivenName);
+
+    function sortGivenName() {
+        sortResults('givenName', true);
+    }
+
+    document.getElementById('sort-date-of-birth').addEventListener('mouseup', sortDateOfBirth);
+
+    function sortDateOfBirth() {
+        sortResults('dateOfBirth', false);
+    }
 
 }());
