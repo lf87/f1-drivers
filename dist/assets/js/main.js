@@ -16,7 +16,7 @@
     'use strict';
 
     // Globals
-    var drivers, jsonData;
+    var drivers, jsonDataDrivers;
 
     // initialize XMLHttpRequest object
     var xhr = new XMLHttpRequest();
@@ -41,7 +41,7 @@
             var response = JSON.parse(xhr.responseText);
 
             // Get desired JSON data
-            jsonData = response.MRData.DriverTable.Drivers;
+            jsonDataDriversDrivers = response.MRData.DriverTable.Drivers;
             // Loop through each driver object
 
             // The default sort order
@@ -52,9 +52,9 @@
 
     // Iterate through all objects and append to DOM
     function sort() {
-        for (var i = 0; i < jsonData.length; i++) {
+        for (var i = 0; i < jsonDataDrivers.length; i++) {
             // The current object
-            drivers = jsonData[i];
+            drivers = jsonDataDrivers[i];
 
             document.getElementById('drivers').innerHTML += '<li>' + drivers.givenName + ' ' + drivers.familyName + '</li>';
         }
@@ -62,7 +62,7 @@
 
     // Sorts the properties within the JSON object based on property value (asc/dec)
     function sortResults(prop, asc) {
-        jsonData = jsonData.sort(function(a, b) {
+        jsonDataDrivers = jsonDataDrivers.sort(function(a, b) {
             if (asc) {
                 return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
             } else {
