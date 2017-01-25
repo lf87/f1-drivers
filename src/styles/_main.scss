@@ -1,0 +1,46 @@
+body {
+    @include font-size(16px);
+    @include pt-sans(400);
+    background-color: $black;
+    color: $white;
+}
+strong {
+	@include pt-sans(700);
+}
+#filter {
+	display: flex;
+	flex: 1;
+	padding: 1em;
+	button {
+		border: none;
+		padding: 0.5em 1em;
+		margin-left: 1em;
+		background-color: $red;
+		cursor: pointer;
+        transition: background-color .1s ease-out;
+		&:hover {
+            background-color: darken($red, 3%);
+        }
+	}
+}
+
+#drivers {
+    display: flex;
+    flex-wrap: wrap;
+    li {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        background-color: $red;
+        padding: 1em;
+        min-width: 150px;
+        margin: 1px;
+        transition: background-color .1s ease-out;
+        cursor: pointer;
+        &:hover {
+            background-color: darken($red, 3%);
+        }
+    }
+}

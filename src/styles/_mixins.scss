@@ -43,8 +43,8 @@
     font-style: $style;
 }
 
-@mixin open-sans($weight: 400, $style: normal) {
-    font-family: 'Open Sans', sans-serif;
+@mixin pt-sans($weight: 400, $style: normal) {
+    font-family: 'PT Sans', sans-serif;;
     font-weight: $weight;
     font-style: $style;
 }
