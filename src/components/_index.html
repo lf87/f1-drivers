@@ -1,10 +1,13 @@
 @@include('./partials/_header.html')
 <div id="filter">
-	<strong>Search:</strong>
-	<button id="sort-family-name">Sort by family name</button>
-	<button id="sort-given-name">Sort by given name</button>
-	<button id="sort-date-of-birth">Sort by date of birth</button>
+	<strong>Sort by (Asc/Dec Toggle):</strong>
+	<button id="sort-family-name">family name</button>
+	<button id="sort-given-name">given name</button>
+	<button id="sort-date-of-birth">date of birth</button>
+	<button id="sort-date-of-birth">driver number</button>
 </div>
+<h2>The below will use autocomplete</h2>
+<p>Show the *fastest/all* driver/drivers to race at *circuit/any circuit* who has/have raced for *constructor/any constructor* during *year/any year* in *Ascending/Descending/Family Name/Date of Birth* Order - <a href="http://ergast.com/mrd/methods/drivers/">http://ergast.com/mrd/methods/drivers/</a></p>
 <main id="main">
     <ul id="drivers"></ul>
 </main>

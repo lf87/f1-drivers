@@ -8,12 +8,16 @@
     "url": "https://gitlab.home-trial.com/infrastructure/gulp-barebones-boilerplate.git"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.22.0",
     "browser-sync": "^2.14.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
+    "gulp-babel": "^6.1.2",
     "gulp-clean-css": "^2.0.12",
+    "gulp-combine-mq": "^0.4.0",
     "gulp-concat": "^2.6.0",
+    "gulp-download": "0.0.1",
     "gulp-file-include": "^0.14.0",
     "gulp-fontmin": "^0.7.4",
     "gulp-imagemin": "^3.0.3",

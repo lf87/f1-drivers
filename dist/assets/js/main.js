@@ -22,7 +22,8 @@
     var xhr = new XMLHttpRequest();
 
     // Specify details and construct request
-    xhr.open('GET', '//ergast.com/api/f1/drivers.json?limit=3000', true);
+    //xhr.open('GET', '//ergast.com/api/f1/drivers.json?limit=3000', true);
+    xhr.open('GET', 'http://ergast.com/api/f1/drivers.json?limit=400', true);
 
     // If above is set to true (asyncrnous) the send method immediately returns
     xhr.send();
@@ -41,7 +42,7 @@
             var response = JSON.parse(xhr.responseText);
 
             // Get desired JSON data
-            jsonDataDriversDrivers = response.MRData.DriverTable.Drivers;
+            jsonDataDrivers = response.MRData.DriverTable.Drivers;
             // Loop through each driver object
 
             // The default sort order
@@ -50,14 +51,22 @@
         }
     }
 
-    // Iterate through all objects and append to DOM
+    // Iterate through all objects, push to array and then write to DOM
     function sort() {
-        for (var i = 0; i < jsonDataDrivers.length; i++) {
+        let driveDataArray = Array(),
+            jsonDataDriverslength = jsonDataDrivers.length;
+        for (let i = 0; i < jsonDataDriverslength; i++) {
             // The current object
             drivers = jsonDataDrivers[i];
-
-            document.getElementById('drivers').innerHTML += '<li>' + drivers.givenName + ' ' + drivers.familyName + '</li>';
+            driveDataArray.push(`<li>
+                                    <div class="flag" style="background-image: url('/dist/assets/img/svg/flag/${drivers.nationality}.svg');"></div>
+                                    <a target="_blank" href="${drivers.url}">
+                                        ${drivers.givenName} ${drivers.familyName}
+                                    </a>
+                                    <span>${drivers.dateOfBirth}</span>
+                                </li>`);
         }
+        document.getElementById('drivers').innerHTML = driveDataArray.join('');
     }
 
     // Sorts the properties within the JSON object based on property value (asc/dec)

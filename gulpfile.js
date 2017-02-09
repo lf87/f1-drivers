@@ -21,6 +21,8 @@
         cleanCSS = require('gulp-clean-css'), // Replaces css-nano, this will also combine MQs
         fontmin = require('gulp-fontmin'), // Font minification - Also generates CSS
         svgmin = require('gulp-svgmin'), // Optimise SVGs
+        download = require("gulp-download"), // Used for download JSON files in this case
+        babel = require('gulp-babel'),
         reload = browserSync.reload;
 
 
@@ -106,7 +108,7 @@
     // $ gulp scss
     gulp.task('scss', function() {
         return gulp.src(src.scss)
-            .pipe(sourcemaps.init())
+            //.pipe(sourcemaps.init())
             .pipe(scss({
                 includePaths: [src.scss]
             }))
@@ -116,13 +118,13 @@
             // Comment out the 2 code below to enable exact line number for sourcemaps (workaround for the issue)
             // Remember to re-enable before testing and/or pushing to staging/prod
             // FROM HERE:
-            .pipe(autoprefixer({
+            /*.pipe(autoprefixer({
                 cascade: false
-            }))
-            .pipe(cleanCSS({ debug: true }, function(details) {
+            }))*/
+            /*.pipe(cleanCSS({ debug: true }, function(details) {
                 console.log(details.name + ' file size before: ' + details.stats.originalSize + ' bytes');
                 console.log(details.name + ' file size after: ' + details.stats.minifiedSize + ' bytes');
-            }))
+            }))*/
             // TO HERE
             .pipe(sourcemaps.write(misc.maps))
             .pipe(gulp.dest(dist.css));
@@ -138,6 +140,9 @@
             .pipe(gulp.dest(dist.js))
             .pipe(rename({
                 suffix: '.min'
+            }))
+            .pipe(babel({
+                presets: ['es2015']
             }))
             .pipe(uglify())
             .on('error', notify.onError(function(error) {
@@ -249,8 +254,6 @@
     // ** Secondary Tasks *** //
     // ********************** //
 
-
-
     // $ scss-lint - SCSS Linter
     gulp.task('scss-lint', function() {
         return gulp.src([misc.lint + ', ' + misc.lintExclude])
@@ -260,5 +263,10 @@
                 'config': 'scss-lint.yml'
             }))
             .pipe(gulp.dest(misc.reports));
+    });
+
+    gulp.task('download', function() {
+        download('http://ergast.com/api/f1/drivers.json?limit=10000')
+            .pipe(gulp.dest("json/"));
     });
 }());
