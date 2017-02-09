@@ -16,15 +16,37 @@
     </header>
 
 <div id="filter">
-	<strong>Sort by (Asc/Dec Toggle):</strong>
-	<button id="sort-family-name">family name</button>
-	<button id="sort-given-name">given name</button>
-	<button id="sort-date-of-birth">date of birth</button>
-	<button id="sort-date-of-birth">driver number</button>
+    <strong>Sort by (Asc/Dec Toggle):</strong>
+    <button id="sort-family-name">family name</button>
+    <button id="sort-given-name">given name</button>
+    <button id="sort-date-of-birth">date of birth</button>
+    <button id="sort-date-of-birth">driver number</button>
 </div>
 <h2>The below will use autocomplete</h2>
-<p>Show the *fastest/all* driver/drivers to race at *circuit/any circuit* who has/have raced for *constructor/any constructor* during *year/any year* in *Ascending/Descending/Family Name/Date of Birth* Order - <a href="http://ergast.com/mrd/methods/drivers/">http://ergast.com/mrd/methods/drivers/</a></p>
+<p>Show drivers who have raced at
+    <select id="circuit">
+        <option value="monaco">Monaco</option>
+        <option value="all">Any circuit</option>
+    </select>
+    that drove for
+	<select id="constructor">
+        <option value="mercedes">Mercedes</option>
+        <option value="all">Any constructor</option>
+    </select>
+    during
+	<select id="year">
+        <option value="2016">2016</option>
+        <option value="all">Any year</option>
+    </select>
+    with a status of (http://ergast.com/api/f1/2010/status)
+    <select id="status">
+        <option value="finished">finished</option>
+        <option value="all">Any</option>
+    </select>
+    </p>
+<button id="go">Go</button>
 <main id="main">
+<div id="test"></div>
     <ul id="drivers"></ul>
 </main>
 	<footer>

@@ -16,46 +16,83 @@
     'use strict';
 
     // Globals
-    var drivers, jsonDataDrivers;
+    var drivers, jsonDataDrivers, circuits, jsonDataCircuits;
 
-    // initialize XMLHttpRequest object
-    var xhr = new XMLHttpRequest();
+    const circuitId = document.getElementById('circuit'),
+        constructorId = document.getElementById('constructor'),
+        yearId = document.getElementById('year'),
+        statusId = document.getElementById('status');
 
-    // Specify details and construct request
-    //xhr.open('GET', '//ergast.com/api/f1/drivers.json?limit=3000', true);
-    xhr.open('GET', 'http://ergast.com/api/f1/drivers.json?limit=400', true);
+    // XMLHttpRequest Request foi circuits
+    function circuitRequest() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `http://ergast.com/api/f1/circuits.json`, true);
+        xhr.onreadystatechange = function() {
+            // Only fire when DONE and the request is SUCCESSFUL
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                jsonDataCircuits = response.MRData.CircuitTable.Circuits;
+                circuitData();
+            }
+        };
+        xhr.send();
+    }
+    circuitRequest();
 
-    // If above is set to true (asyncrnous) the send method immediately returns
-    xhr.send();
-
-    // Event listener that is fired by the XMLHttpRequest object whenever the
-    // request hits an important milestone (0:UNSENT, 1:OPENED, 2:HEADERS_RECEIEVED, 3:LOADING, 4:DONE)
-    xhr.onreadystatechange = processRequest;
-    //xhr.addEventListener('readystatechange', processRequest, false);
-
-    //  event handler code that reads the result that gets returned
-    function processRequest() {
-        // Only fire when DONE and the request is SUCCESSFUL
-        if (xhr.readyState === 4 && xhr.status === 200) {
-
-            // Read and parse the value of responseText
-            var response = JSON.parse(xhr.responseText);
-
-            // Get desired JSON data
-            jsonDataDrivers = response.MRData.DriverTable.Drivers;
-            // Loop through each driver object
-
-            // The default sort order
-            sort();
-
+    // Iterate through all circuit data and push to array
+    function circuitData() {
+        let circuitDataArray = Array(),
+            jsonDataCircuitsLength = jsonDataCircuits.length;
+        for (let i = 0; i < jsonDataCircuitsLength; i++) {
+            circuits = jsonDataCircuits[i];
+            circuitDataArray.push(`<li>
+                                    ${circuits.circuitName}
+                                </li>`);
         }
+        document.getElementById('test').innerHTML = circuitDataArray.join('');
     }
 
-    // Iterate through all objects, push to array and then write to DOM
-    function sort() {
+    // XMLHttpRequest Request for drivers
+    function filterRequest(circuit, constructor, year, status) {
+        console.log('circuit, constructor, year, status', circuit, constructor, year, status);
+        // initialize XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Specify details and construct request
+        //xhr.open('GET', '//ergast.com/api/f1/drivers.json?limit=3000', true);
+        xhr.open('GET', `http://ergast.com/api/f1/${year}/constructors/${constructor}/circuits/${circuit}/drivers.json`, true);
+
+
+        // Event listener that is fired by the XMLHttpRequest object whenever the
+        // request hits an important milestone (0:UNSENT, 1:OPENED, 2:HEADERS_RECEIEVED, 3:LOADING, 4:DONE)
+
+        xhr.onreadystatechange = function() {
+            // Only fire when DONE and the request is SUCCESSFUL
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("2");
+
+                // Read and parse the value of responseText
+                var response = JSON.parse(xhr.responseText);
+
+                // Get desired JSON data
+                jsonDataDrivers = response.MRData.DriverTable.Drivers;
+                // Loop through each driver object
+
+                // The default sort order
+                driverData();
+
+            }
+        };
+        // If above is set to true (asyncrnous) the send method immediately returns
+        xhr.send();
+        //xhr.addEventListener('readystatechange', processRequest, false);
+    }
+
+    // Iterate through all driver data, push to array and then write to DOM
+    function driverData() {
         let driveDataArray = Array(),
-            jsonDataDriverslength = jsonDataDrivers.length;
-        for (let i = 0; i < jsonDataDriverslength; i++) {
+            jsonDataDriversLength = jsonDataDrivers.length;
+        for (let i = 0; i < jsonDataDriversLength; i++) {
             // The current object
             drivers = jsonDataDrivers[i];
             driveDataArray.push(`<li>
@@ -69,8 +106,23 @@
         document.getElementById('drivers').innerHTML = driveDataArray.join('');
     }
 
+    // Filter on click
+    function driverFilter() {
+        var circuit = circuitId.options[circuitId.selectedIndex].value,
+            constructor = constructorId.options[constructorId.selectedIndex].value,
+            year = yearId.options[yearId.selectedIndex].value,
+            status = statusId.options[statusId.selectedIndex].value;
+
+        filterRequest(circuit, constructor, year, status);
+        console.log("in");
+    }
+
+    // Assign filter event handler
+    document.getElementById('go').addEventListener('mouseup', driverFilter);
+
     // Sorts the properties within the JSON object based on property value (asc/dec)
     function sortResults(prop, asc) {
+        console.log('sortResults', sortResults);
         jsonDataDrivers = jsonDataDrivers.sort(function(a, b) {
             if (asc) {
                 return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
@@ -81,13 +133,14 @@
 
         // Clear DOM ready for re-ordering
         document.getElementById('drivers').innerHTML = '';
-        sort();
+        driverData();
     }
 
     // Assign even handlers and declare related functions
     document.getElementById('sort-family-name').addEventListener('mouseup', sortFamilyName);
 
     function sortFamilyName() {
+        console.log('sortFamilyName', sortFamilyName);
         sortResults('familyName', true);
     }
 
