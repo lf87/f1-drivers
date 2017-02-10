@@ -144,10 +144,10 @@
             .pipe(babel({
                 presets: ['es2015']
             }))
-            .pipe(uglify())
             .on('error', notify.onError(function(error) {
                 return 'An error occurred while compiling JS.\nLook in the console for details.\n' + error;
             }))
+            .pipe(uglify())
             .pipe(sourcemaps.write(misc.maps))
             .pipe(gulp.dest(dist.js))
             .pipe(reload({
@@ -265,8 +265,17 @@
             .pipe(gulp.dest(misc.reports));
     });
 
-    gulp.task('download', function() {
-        download('http://ergast.com/api/f1/drivers.json?limit=10000')
+    gulp.task('drivers', function() {
+        download('http://ergast.com/api/f1/drivers.json?limit=3000')
             .pipe(gulp.dest("json/"));
     });
+    gulp.task('circuits', function() {
+        download('http://ergast.com/api/f1/circuits.json?limit=300')
+            .pipe(gulp.dest("json/"));
+    });
+    gulp.task('constructors', function() {
+        download('http://ergast.com/api/f1/constructors.json?limit=300')
+            .pipe(gulp.dest("json/"));
+    });
+    gulp.task('download', ['circuits', 'constructors']);
 }());

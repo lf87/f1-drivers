@@ -15,8 +15,12 @@
 (function() {
     'use strict';
 
+    // ********************************* //
+    // RE-USABLE FUNCTIONS AND VARIABLES //
+    // ********************************* //
+
     // Globals
-    var drivers, jsonDataDrivers, circuits, jsonDataCircuits;
+    var drivers, jsonDataDrivers, circuits, jsonDataCircuits, constructors, jsonDataConstructors;
 
     // DOM
     const circuitId = document.getElementById('circuit'),
@@ -26,7 +30,6 @@
 
     // Sorts the properties within the JSON object based on property value (asc/dec)
     function sortResults(prop, asc, data, reorder) {
-            console.log('data', data);
         data = data.sort(function(a, b) {
             if (asc) {
                 return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
@@ -42,12 +45,39 @@
         }
     }
 
-    // XMLHttpRequest Request for circuits
+    // ********************** //
+    // SORTING EVENT HANDLERS //
+    // ********************** //
+
+    // Assign even handlers and declare related functions
+    document.getElementById('sort-family-name').addEventListener('mouseup', sortFamilyName, true);
+
+    function sortFamilyName() {
+        console.log('sortFamilyName', sortFamilyName);
+        // json object prop, ascending order, data set, clear and re-order driver data
+        sortResults('familyName', true, jsonDataDrivers, true);
+    }
+
+    document.getElementById('sort-given-name').addEventListener('mouseup', sortGivenName);
+
+    function sortGivenName() {
+        sortResults('givenName', true, jsonDataDrivers, true);
+    }
+
+    document.getElementById('sort-date-of-birth').addEventListener('mouseup', sortDateOfBirth);
+
+    function sortDateOfBirth() {
+        sortResults('dateOfBirth', false, jsonDataDrivers, true);
+    }
+
+    // ******************* //
+    // CIRCUIT OPTION DATA //
+    // ******************* //
+
     function circuitRequest() {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', `http://ergast.com/api/f1/circuits.json?limit=100`, true);
+        xhr.open('GET', `json/circuits.json`, true);
         xhr.onreadystatechange = function() {
-            // Only fire when DONE and the request is SUCCESSFUL
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
                 jsonDataCircuits = response.MRData.CircuitTable.Circuits;
@@ -58,25 +88,73 @@
     }
     circuitRequest();
 
-    // Sort circuit data
     function sortCircuitData() {
         sortResults('circuitName', true, jsonDataCircuits, false);
         circuitData();
     }
 
-    // Iterate through all circuit data and push to array
     function circuitData() {
-        console.log("test");
         let circuitDataArray = Array(),
             jsonDataCircuitsLength = jsonDataCircuits.length;
         for (let i = 0; i < jsonDataCircuitsLength; i++) {
             circuits = jsonDataCircuits[i];
-            circuitDataArray.push(`<option value="${circuits.circuitId}">${circuits.Location.country} - ${circuits.Location.locality} - ${circuits.circuitName}</option>`);
+            circuitDataArray.push(`<option value="${circuits.circuitId}">${circuits.circuitName} - ${circuits.Location.locality} - ${circuits.Location.country}</option>`);
         }
         circuitId.innerHTML = circuitDataArray.join('');
     }
 
-    // XMLHttpRequest Request for drivers
+    // *********************** //
+    // CONSTRUCTOR OPTION DATA //
+    // *********************** //
+
+
+    // function createData() {
+    var jsonData = {
+            constructors: {
+                file: 'json/Constructors.json',
+                topProperty: response.MRData.ConstructorTable.Constructors,
+                sortBy: 'name',
+                html: `<option value="${constructors.constructorId}">${constructors.name}</option>`,
+            }
+        };
+        //}
+
+    function constructorRequest() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `json/Constructors.json`, true);
+        xhr.onreadystatechange = function() {
+            // Only fire when DONE and the request is SUCCESSFUL
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                jsonDataConstructors = jsonData.constructors.topProperty;
+                console.log('jsonData.constructors.topProperty', jsonData.constructors.topProperty);
+                sortConstructorData();
+            }
+        };
+        xhr.send();
+    }
+    constructorRequest();
+
+    function sortConstructorData() {
+        sortResults('name', true, jsonDataConstructors, false);
+        constructorData();
+    }
+
+    function constructorData() {
+        let constructorDataArray = Array(),
+            jsonDataConstructorsLength = jsonDataConstructors.length;
+        for (let i = 0; i < jsonDataConstructorsLength; i++) {
+            constructors = jsonDataConstructors[i];
+            constructorDataArray.push(`<option value="${constructors.constructorId}">${constructors.name}</option>`);
+        }
+        constructorId.innerHTML = constructorDataArray.join('');
+    }
+
+    // ********* //
+    // FILTERING //
+    // ********* //
+
+    // XMLHttpRequest Request for filter
     function filterRequest(circuit, constructor, year, status) {
         console.log('circuit, constructor, year, status', circuit, constructor, year, status);
         // initialize XMLHttpRequest object
@@ -84,8 +162,8 @@
 
         // Specify details and construct request
         //xhr.open('GET', '//ergast.com/api/f1/drivers.json?limit=3000', true);
-        xhr.open('GET', `http://ergast.com/api/f1/${year}/constructors/${constructor}/circuits/${circuit}/drivers.json`, true);
-        console.log('`http://ergast.com/api/f1/${year}/constructors/${constructor}/circuits/${circuit}/drivers.json`', `http://ergast.com/api/f1/${year}/constructors/${constructor}/circuits/${circuit}/drivers.json`);
+        xhr.open('GET', `http://ergast.com/api/f1/${year}/Constructors/${constructor}/circuits/${circuit}/drivers.json`, true);
+        console.log('`http://ergast.com/api/f1/${year}/Constructors/${constructor}/circuits/${circuit}/drivers.json`', `http://ergast.com/api/f1/${year}/Constructors/${constructor}/circuits/${circuit}/drivers.json`);
 
 
         // Event listener that is fired by the XMLHttpRequest object whenever the
@@ -142,28 +220,8 @@
         console.log("in");
     }
 
+
     // Assign filter event handler
     document.getElementById('go').addEventListener('mouseup', driverFilter);
-
-    // Assign even handlers and declare related functions
-    document.getElementById('sort-family-name').addEventListener('mouseup', sortFamilyName, true);
-
-    function sortFamilyName() {
-        console.log('sortFamilyName', sortFamilyName);
-        // json object prop, ascending order, data set, clear and re-order driver data
-        sortResults('familyName', true, jsonDataDrivers, true);
-    }
-
-    document.getElementById('sort-given-name').addEventListener('mouseup', sortGivenName);
-
-    function sortGivenName() {
-        sortResults('givenName', true, jsonDataDrivers, true);
-    }
-
-    document.getElementById('sort-date-of-birth').addEventListener('mouseup', sortDateOfBirth);
-
-    function sortDateOfBirth() {
-        sortResults('dateOfBirth', false, jsonDataDrivers, true);
-    }
 
 }());
