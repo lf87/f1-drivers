@@ -277,5 +277,9 @@
         download('http://ergast.com/api/f1/constructors.json?limit=300')
             .pipe(gulp.dest("json/"));
     });
-    gulp.task('download', ['circuits', 'constructors']);
+    gulp.task('status', function() {
+        download('http://ergast.com/api/f1/status.json?limit=300')
+            .pipe(gulp.dest("json/"));
+    });
+    gulp.task('download', ['circuits', 'constructors', 'status']);
 }());

@@ -20,7 +20,7 @@
     // ********************************* //
 
     // Globals
-    var drivers, jsonDataDrivers, circuits, jsonDataCircuits, constructors, jsonDataConstructors;
+    var drivers, jsonDataDrivers, circuits, jsonDataCircuits, constructors, jsonDataConstructors, status, jsonDataStatus;
 
     // DOM
     const circuitId = document.getElementById('circuit'),
@@ -53,7 +53,6 @@
     document.getElementById('sort-family-name').addEventListener('mouseup', sortFamilyName, true);
 
     function sortFamilyName() {
-        console.log('sortFamilyName', sortFamilyName);
         // json object prop, ascending order, data set, clear and re-order driver data
         sortResults('familyName', true, jsonDataDrivers, true);
     }
@@ -68,6 +67,44 @@
 
     function sortDateOfBirth() {
         sortResults('dateOfBirth', false, jsonDataDrivers, true);
+    }
+
+    // ****************** //
+    // STATUS OPTION DATA //
+    // ****************** //
+
+    function statusRequest() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `json/status.json`, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                console.log("in");
+                jsonDataStatus = response.MRData.StatusTable.Status;
+                sortStatusData();
+            }
+        };
+        xhr.send();
+    }
+    statusRequest();
+
+    function sortStatusData() {
+        sortResults('status', true, jsonDataStatus, false);
+        statusData();
+    }
+
+    function statusData() {
+        let statusDataArray = Array(),
+            jsonDataStatusLength = jsonDataStatus.length;
+        statusDataArray.push(`<option value="">any status</option>`);
+        for (let i = 0; i < jsonDataStatusLength; i++) {
+            status = jsonDataStatus[i];
+            statusDataArray.push(`<option value="${status.statusId}">${status.status} (${status.count})</option>`);
+        }
+        statusId.innerHTML = statusDataArray.join('');
+        var barq = new Barq(statusId, {
+            useFirstOptionTextAsPlaceholder: true
+        }).init();
     }
 
     // ******************* //
@@ -96,28 +133,20 @@
     function circuitData() {
         let circuitDataArray = Array(),
             jsonDataCircuitsLength = jsonDataCircuits.length;
+        circuitDataArray.push(`<option value="">any circuit</option>`);
         for (let i = 0; i < jsonDataCircuitsLength; i++) {
             circuits = jsonDataCircuits[i];
             circuitDataArray.push(`<option value="${circuits.circuitId}">${circuits.circuitName} - ${circuits.Location.locality} - ${circuits.Location.country}</option>`);
         }
         circuitId.innerHTML = circuitDataArray.join('');
+        var barq = new Barq(circuitId, {
+            useFirstOptionTextAsPlaceholder: true
+        }).init();
     }
 
     // *********************** //
     // CONSTRUCTOR OPTION DATA //
     // *********************** //
-
-
-    // function createData() {
-    var jsonData = {
-            constructors: {
-                file: 'json/Constructors.json',
-                topProperty: response.MRData.ConstructorTable.Constructors,
-                sortBy: 'name',
-                html: `<option value="${constructors.constructorId}">${constructors.name}</option>`,
-            }
-        };
-        //}
 
     function constructorRequest() {
         var xhr = new XMLHttpRequest();
@@ -126,8 +155,7 @@
             // Only fire when DONE and the request is SUCCESSFUL
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
-                jsonDataConstructors = jsonData.constructors.topProperty;
-                console.log('jsonData.constructors.topProperty', jsonData.constructors.topProperty);
+                jsonDataConstructors = response.MRData.ConstructorTable.Constructors;
                 sortConstructorData();
             }
         };
@@ -143,11 +171,15 @@
     function constructorData() {
         let constructorDataArray = Array(),
             jsonDataConstructorsLength = jsonDataConstructors.length;
+        constructorDataArray.push(`<option value="">any constructor</option>`);
         for (let i = 0; i < jsonDataConstructorsLength; i++) {
             constructors = jsonDataConstructors[i];
             constructorDataArray.push(`<option value="${constructors.constructorId}">${constructors.name}</option>`);
         }
         constructorId.innerHTML = constructorDataArray.join('');
+        var barq = new Barq(constructorId, {
+            useFirstOptionTextAsPlaceholder: true
+        }).init();
     }
 
     // ********* //
@@ -156,14 +188,13 @@
 
     // XMLHttpRequest Request for filter
     function filterRequest(circuit, constructor, year, status) {
-        console.log('circuit, constructor, year, status', circuit, constructor, year, status);
         // initialize XMLHttpRequest object
         var xhr = new XMLHttpRequest();
 
         // Specify details and construct request
         //xhr.open('GET', '//ergast.com/api/f1/drivers.json?limit=3000', true);
-        xhr.open('GET', `http://ergast.com/api/f1/${year}/Constructors/${constructor}/circuits/${circuit}/drivers.json`, true);
-        console.log('`http://ergast.com/api/f1/${year}/Constructors/${constructor}/circuits/${circuit}/drivers.json`', `http://ergast.com/api/f1/${year}/Constructors/${constructor}/circuits/${circuit}/drivers.json`);
+        xhr.open('GET', `http://ergast.com/api/f1/${year}${constructor}${circuit}${status}drivers.json?limit=50`, true);
+        console.log(`http://ergast.com/api/f1/${year}${constructor}${circuit}${status}drivers.json?limit=50`);
 
 
         // Event listener that is fired by the XMLHttpRequest object whenever the
@@ -172,7 +203,6 @@
         xhr.onreadystatechange = function() {
             // Only fire when DONE and the request is SUCCESSFUL
             if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log("2");
 
                 // Read and parse the value of responseText
                 var response = JSON.parse(xhr.responseText);
@@ -211,17 +241,43 @@
 
     // Filter on click
     function driverFilter() {
-        let circuit = circuitId.options[circuitId.selectedIndex].value,
-            constructor = constructorId.options[constructorId.selectedIndex].value,
-            year = yearId.options[yearId.selectedIndex].value,
-            status = statusId.options[statusId.selectedIndex].value;
+        var circuitVal = circuitId.options[circuitId.selectedIndex].value,
+            constructorVal = constructorId.options[constructorId.selectedIndex].value,
+            yearVal = yearId.options[yearId.selectedIndex].value,
+            statusVal = statusId.options[statusId.selectedIndex].value;
+        if (circuitVal) {
+            var circuit = `circuits/${circuitVal}/`;
+        } else {
+            var circuit = '';
+        }
+        if (yearVal) {
+            console.log("in");
+            var year = `${yearVal}/`;
+        } else {
+            console.log("else");
+            var year = '';
+        }
+        if (constructorVal) {
+            var constructor = `constructors/${constructorVal}/`;
+        } else {
+            var constructor = '';
+        }
+        if (statusVal) {
+            var status = `status/${statusVal}/`;
+        } else {
+            var status = '';
+        }
 
         filterRequest(circuit, constructor, year, status);
-        console.log("in");
     }
 
 
     // Assign filter event handler
     document.getElementById('go').addEventListener('mouseup', driverFilter);
+
+    // Year autocomplete init
+    var barq = new Barq(yearId, {
+        useFirstOptionTextAsPlaceholder: true
+    }).init();
 
 }());
