@@ -17,7 +17,7 @@ strong {
     background-position: center -10px;
     background-size: cover;
     position: relative;
-    @include bp-sm {
+    @include bp-small {
         height: 60px;
         @include font-size(26px);
     }
@@ -43,7 +43,7 @@ h1 {
     padding: 0;
     height: 120px;
     text-shadow: rgba($black, 0.8) 2px 2px 4px;
-    @include bp-sm {
+    @include bp-small {
         @include font-size(26px);
         top: 10px;
     }
@@ -63,26 +63,12 @@ h1 {
     background-color: $shark;
     z-index: 1;
     width: 100%;
-    button {
-        transition: transform .5s ease-out;
-        transform: translate3d(0, 0, 0);
-        z-index: 1;
-    }
-    &:hover {
-        button {
-            transform: translate3d(-75px, 0, 0);
-        }
-        .filters-mask {
-            opacity: 0;
-        }
-    }
 }
 
 .filters-mask {
     @include pt-sans(700);
     @include font-size(18px);
     cursor: pointer;
-    transition: opacity .25s ease-out;
     padding-right: 15px;
     padding-left: 15px;
     display: flex;
@@ -131,6 +117,7 @@ button {
     display: flex;
     flex-wrap: wrap;
     padding-bottom: 93px;
+    margin-top: 1rem;
     li {
         flex: 1;
         display: flex;
@@ -139,12 +126,15 @@ button {
         text-align: center;
         justify-content: center;
         background-color: $red;
-        padding: 1em;
+        padding: .25em;
         min-width: 150px;
         margin: 1px;
         transition: background-color .2s ease-in;
         cursor: pointer;
         position: relative;
+        span {
+            @include font-size(13px);
+        }
         &:hover {
             background-color: darken($red, 3%);
             .flag {

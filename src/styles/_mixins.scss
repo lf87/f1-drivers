@@ -92,8 +92,8 @@
 }
 
 // Misc Breakpoints
-@mixin bp-height-small {
-    @media only screen and (max-height: 400px) {
+@mixin bp-small {
+    @media only screen and (max-height: 600px), (max-width: 479px) {
         @content;
     }
 }

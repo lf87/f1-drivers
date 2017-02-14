@@ -10,7 +10,8 @@
 
 .barq-list {
     list-style-type: none;
-    max-height: 310px;
+    max-height: 400px;
+    max-width: 300px;
     // Default is bold, matches are regular
     font-weight: bold;
     // Avoid double borders with the input
@@ -30,7 +31,7 @@
 .barq-list li {
     cursor: pointer;
     font-size: 14px;
-    padding: .25em;
+    padding: .25em .5em;
     color: $white;
     transition: .05s ease-in;
 }
@@ -51,5 +52,8 @@
     display: none;
 }
 
+.barq-list li:hover,
 .barq-active-item {
+    background-color: rgba($white, .1);
+    color: $red;
 }

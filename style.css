@@ -164,7 +164,7 @@ strong {
   background-position: center -10px;
   background-size: cover;
   position: relative; }
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-height: 600px), (max-width: 479px) {
     .banner {
       height: 60px;
       font-size: 26px;
@@ -196,7 +196,7 @@ h1 {
   padding: 0;
   height: 120px;
   text-shadow: rgba(0, 0, 0, 0.8) 2px 2px 4px; }
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-height: 600px), (max-width: 479px) {
     h1 {
       font-size: 26px;
       line-height: 39px;
@@ -217,14 +217,6 @@ h1 {
   background-color: #151617;
   z-index: 1;
   width: 100%; }
-  #filter button {
-    transition: transform .5s ease-out;
-    transform: translate3d(0, 0, 0);
-    z-index: 1; }
-  #filter:hover button {
-    transform: translate3d(-75px, 0, 0); }
-  #filter:hover .filters-mask {
-    opacity: 0; }
 
 .filters-mask {
   font-family: 'PT Sans', sans-serif;
@@ -235,7 +227,6 @@ h1 {
   font-size: 1.125rem;
   line-height: 1.6875rem;
   cursor: pointer;
-  transition: opacity .25s ease-out;
   padding-right: 15px;
   padding-left: 15px;
   display: flex;
@@ -283,7 +274,8 @@ button {
 #drivers {
   display: flex;
   flex-wrap: wrap;
-  padding-bottom: 93px; }
+  padding-bottom: 93px;
+  margin-top: 1rem; }
   #drivers li {
     flex: 1;
     display: flex;
@@ -292,12 +284,17 @@ button {
     text-align: center;
     justify-content: center;
     background-color: #d31411;
-    padding: 1em;
+    padding: .25em;
     min-width: 150px;
     margin: 1px;
     transition: background-color .2s ease-in;
     cursor: pointer;
     position: relative; }
+    #drivers li span {
+      font-size: 13px;
+      line-height: 19.5px;
+      font-size: 0.8125rem;
+      line-height: 1.21875rem; }
     #drivers li:hover {
       background-color: #c51310; }
       #drivers li:hover .flag {
@@ -333,7 +330,8 @@ button {
 
 .barq-list {
   list-style-type: none;
-  max-height: 310px;
+  max-height: 400px;
+  max-width: 300px;
   font-weight: bold;
   border-top: none;
   position: absolute;
@@ -346,7 +344,7 @@ button {
 .barq-list li {
   cursor: pointer;
   font-size: 14px;
-  padding: .25em;
+  padding: .25em .5em;
   color: #fff;
   transition: .05s ease-in; }
 
@@ -361,3 +359,8 @@ button {
 
 .barq-hidden {
   display: none; }
+
+.barq-list li:hover,
+.barq-active-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #d31411; }

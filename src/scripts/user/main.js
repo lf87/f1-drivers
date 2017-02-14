@@ -20,7 +20,7 @@
     // ********************************* //
 
     // Globals
-    var drivers, jsonDataDrivers, circuits, jsonDataCircuits, constructors, jsonDataConstructors, status, jsonDataStatus;
+    var drivers, jsonDataDrivers, circuits, jsonDataCircuits, constructors, jsonDataConstructors, status, jsonDataStatus, circuitVal, constructorVal, yearVal, statusVal, circuit, year, constructor;
 
     // DOM
     var circuitId = document.getElementById('circuit'),
@@ -79,7 +79,7 @@
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
-        console.log("in");
+                console.log("in");
                 jsonDataStatus = response.MRData.StatusTable.Status;
                 sortStatusData();
             }
@@ -96,8 +96,8 @@
     function statusData() {
         let statusDataArray = Array(),
             jsonDataStatusLength = jsonDataStatus.length;
-            statusDataArray.push(`<option value="any">...</option>`);
-            statusDataArray.push(`<option value="any">any status</option>`);
+        statusDataArray.push(`<option value="any">...</option>`);
+        statusDataArray.push(`<option value="any">any status</option>`);
         for (let i = 0; i < jsonDataStatusLength; i++) {
             status = jsonDataStatus[i];
             statusDataArray.push(`<option value="${status.statusId}">${status.status} (${status.count})</option>`);
@@ -132,8 +132,8 @@
     function circuitData() {
         let circuitDataArray = Array(),
             jsonDataCircuitsLength = jsonDataCircuits.length;
-            circuitDataArray.push(`<option value="any">...</option>`);
-            circuitDataArray.push(`<option value="any">any circuit</option>`);
+        circuitDataArray.push(`<option value="any">...</option>`);
+        circuitDataArray.push(`<option value="any">any circuit</option>`);
         for (let i = 0; i < jsonDataCircuitsLength; i++) {
             circuits = jsonDataCircuits[i];
             circuitDataArray.push(`<option value="${circuits.circuitId}">${circuits.circuitName} - ${circuits.Location.locality} - ${circuits.Location.country}</option>`);
@@ -176,7 +176,7 @@
             constructorDataArray.push(`<option value="${constructors.constructorId}">${constructors.name}</option>`);
         }
         constructorId.innerHTML = constructorDataArray.join('');
-         var barq = new Barq(constructorId).init();
+        var barq = new Barq(constructorId).init();
     }
 
     // ********* //
@@ -238,42 +238,38 @@
 
     // Filter on click
     function driverFilter() {
-        var circuitVal = circuitId.options[circuitId.selectedIndex].value,
-            constructorVal = constructorId.options[constructorId.selectedIndex].value,
-            yearVal = yearId.options[yearId.selectedIndex].value,
-            statusVal = statusId.options[statusId.selectedIndex].value;
-        if (circuitVal !='any') {
-            var circuit = `circuits/${circuitVal}/`;
+        circuitVal = circuitId.options[circuitId.selectedIndex].value;
+        constructorVal = constructorId.options[constructorId.selectedIndex].value;
+        yearVal = yearId.options[yearId.selectedIndex].value;
+        statusVal = statusId.options[statusId.selectedIndex].value;
+        if (circuitVal !== 'any') {
+            circuit = `circuits/${circuitVal}/`;
             console.log('circuit', circuit);
+        } else {
+            circuit = '';
         }
-        else {
-            var circuit = '';
-        }
-        if (yearVal !='any') {
-            var year = `${yearVal}/`;
+        if (yearVal !== 'any') {
+            year = `${yearVal}/`;
             console.log('year', year);
+        } else {
+            year = '';
         }
-        else {
-            var year = '';
-        }
-        if (constructorVal !='any') {
-            var constructor = `constructors/${constructorVal}/`;
+        if (constructorVal !== 'any') {
+            constructor = `constructors/${constructorVal}/`;
             console.log('constructor', constructor);
+        } else {
+            constructor = '';
         }
-        else {
-            var constructor = '';
-        }
-        if (statusVal !='any') {
-            var status = `status/${statusVal}/`;
+        if (statusVal !== 'any') {
+            status = `status/${statusVal}/`;
             console.log('status', status);
+        } else {
+            status = '';
         }
-        else {
-            var status = '';
-        }
-/*        console.log('circuit:', circuit);
-            console.log('constructor:', constructor);
-            console.log('year:', year);
-            console.log('status:', status);*/
+        /*        console.log('circuit:', circuit);
+                    console.log('constructor:', constructor);
+                    console.log('year:', year);
+                    console.log('status:', status);*/
 
         filterRequest(circuit, constructor, year, status);
     }
