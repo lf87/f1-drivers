@@ -23,7 +23,7 @@
     var drivers, jsonDataDrivers, circuits, jsonDataCircuits, constructors, jsonDataConstructors, status, jsonDataStatus;
 
     // DOM
-    const circuitId = document.getElementById('circuit'),
+    var circuitId = document.getElementById('circuit'),
         constructorId = document.getElementById('constructor'),
         yearId = document.getElementById('year'),
         statusId = document.getElementById('status');
@@ -79,7 +79,7 @@
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
-                console.log("in");
+        console.log("in");
                 jsonDataStatus = response.MRData.StatusTable.Status;
                 sortStatusData();
             }
@@ -96,15 +96,14 @@
     function statusData() {
         let statusDataArray = Array(),
             jsonDataStatusLength = jsonDataStatus.length;
-        statusDataArray.push(`<option value="">any status</option>`);
+            statusDataArray.push(`<option value="any">...</option>`);
+            statusDataArray.push(`<option value="any">any status</option>`);
         for (let i = 0; i < jsonDataStatusLength; i++) {
             status = jsonDataStatus[i];
             statusDataArray.push(`<option value="${status.statusId}">${status.status} (${status.count})</option>`);
         }
         statusId.innerHTML = statusDataArray.join('');
-        var barq = new Barq(statusId, {
-            useFirstOptionTextAsPlaceholder: true
-        }).init();
+        var barq = new Barq(statusId).init();
     }
 
     // ******************* //
@@ -133,15 +132,14 @@
     function circuitData() {
         let circuitDataArray = Array(),
             jsonDataCircuitsLength = jsonDataCircuits.length;
-        circuitDataArray.push(`<option value="">any circuit</option>`);
+            circuitDataArray.push(`<option value="any">...</option>`);
+            circuitDataArray.push(`<option value="any">any circuit</option>`);
         for (let i = 0; i < jsonDataCircuitsLength; i++) {
             circuits = jsonDataCircuits[i];
             circuitDataArray.push(`<option value="${circuits.circuitId}">${circuits.circuitName} - ${circuits.Location.locality} - ${circuits.Location.country}</option>`);
         }
         circuitId.innerHTML = circuitDataArray.join('');
-        var barq = new Barq(circuitId, {
-            useFirstOptionTextAsPlaceholder: true
-        }).init();
+        var barq = new Barq(circuitId).init();
     }
 
     // *********************** //
@@ -171,15 +169,14 @@
     function constructorData() {
         let constructorDataArray = Array(),
             jsonDataConstructorsLength = jsonDataConstructors.length;
-        constructorDataArray.push(`<option value="">any constructor</option>`);
+        constructorDataArray.push(`<option value="any">...</option>`);
+        constructorDataArray.push(`<option value="any">any constructor</option>`);
         for (let i = 0; i < jsonDataConstructorsLength; i++) {
             constructors = jsonDataConstructors[i];
             constructorDataArray.push(`<option value="${constructors.constructorId}">${constructors.name}</option>`);
         }
         constructorId.innerHTML = constructorDataArray.join('');
-        var barq = new Barq(constructorId, {
-            useFirstOptionTextAsPlaceholder: true
-        }).init();
+         var barq = new Barq(constructorId).init();
     }
 
     // ********* //
@@ -245,28 +242,38 @@
             constructorVal = constructorId.options[constructorId.selectedIndex].value,
             yearVal = yearId.options[yearId.selectedIndex].value,
             statusVal = statusId.options[statusId.selectedIndex].value;
-        if (circuitVal) {
+        if (circuitVal !='any') {
             var circuit = `circuits/${circuitVal}/`;
-        } else {
+            console.log('circuit', circuit);
+        }
+        else {
             var circuit = '';
         }
-        if (yearVal) {
-            console.log("in");
+        if (yearVal !='any') {
             var year = `${yearVal}/`;
-        } else {
-            console.log("else");
+            console.log('year', year);
+        }
+        else {
             var year = '';
         }
-        if (constructorVal) {
+        if (constructorVal !='any') {
             var constructor = `constructors/${constructorVal}/`;
-        } else {
+            console.log('constructor', constructor);
+        }
+        else {
             var constructor = '';
         }
-        if (statusVal) {
+        if (statusVal !='any') {
             var status = `status/${statusVal}/`;
-        } else {
+            console.log('status', status);
+        }
+        else {
             var status = '';
         }
+/*        console.log('circuit:', circuit);
+            console.log('constructor:', constructor);
+            console.log('year:', year);
+            console.log('status:', status);*/
 
         filterRequest(circuit, constructor, year, status);
     }
@@ -276,8 +283,6 @@
     document.getElementById('go').addEventListener('mouseup', driverFilter);
 
     // Year autocomplete init
-    var barq = new Barq(yearId, {
-        useFirstOptionTextAsPlaceholder: true
-    }).init();
+    var barq = new Barq(yearId).init();
 
 }());

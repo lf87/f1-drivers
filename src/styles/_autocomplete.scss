@@ -1,0 +1,55 @@
+.barq-text-input {
+    @include font-size(16px);
+    border: none;
+    display: inline-block;
+    padding: .25em;
+    background-color: transparent;
+    color: $red;
+    outline: none;
+}
+
+.barq-list {
+    list-style-type: none;
+    max-height: 310px;
+    // Default is bold, matches are regular
+    font-weight: bold;
+    // Avoid double borders with the input
+    border-top: none;
+    // Top and Left coords are controled by JS
+    position: absolute;
+    // Allow for scrolling and paginating
+    overflow: auto;
+    // Initially invisible, JS shows it
+    display: none;
+    // You might want to keep track of your z-indexes
+    z-index: 666;
+    background-color: $shark;
+    border: 1px $white solid;
+}
+
+.barq-list li {
+    cursor: pointer;
+    font-size: 14px;
+    padding: .25em;
+    color: $white;
+    transition: .05s ease-in;
+}
+
+.barq-list li:hover {
+    color: $red;
+}
+
+.barq-match {
+    color: $red;
+}
+
+.barq-visible {
+    display: block;
+}
+
+.barq-hidden {
+    display: none;
+}
+
+.barq-active-item {
+}

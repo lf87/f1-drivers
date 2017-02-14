@@ -1,7 +1,7 @@
 body {
     @include font-size(16px);
     @include pt-sans(400);
-    background-color: $black;
+    background-color: $shark;
     color: $white;
 }
 
@@ -9,26 +9,128 @@ strong {
     @include pt-sans(700);
 }
 
+.banner {
+    width: 100%;
+    height: 150px;
+    background-image: url('dist/assets/img/banner.jpg');
+    background-repeat: no-repeat;
+    background-position: center -10px;
+    background-size: cover;
+    position: relative;
+    @include bp-sm {
+        height: 60px;
+        @include font-size(26px);
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba($shark, .0) 0%, rgba($shark, .75) 85%, rgba($shark, 1) 100%);
+    }
+}
+
+h1 {
+    @include font-size(50px);
+    @include pt-sans(700);
+    position: absolute;
+    top: 30px;
+    left: 15px;
+    color: $red;
+    z-index: 1;
+    padding: 0;
+    height: 120px;
+    text-shadow: rgba($black, 0.8) 2px 2px 4px;
+    @include bp-sm {
+        @include font-size(26px);
+        top: 10px;
+    }
+}
+
+#search {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
 #filter {
-    display: flex;
-    flex: 1;
-    padding: 1em;
+    padding-top: 15px;
+    padding-right: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: $shark;
+    z-index: 1;
+    width: 100%;
     button {
-        border: none;
-        padding: 0.5em 1em;
-        margin-left: 1em;
-        background-color: $red;
-        cursor: pointer;
-        transition: background-color .1s ease-out;
-        &:hover {
-            background-color: darken($red, 3%);
+        transition: transform .5s ease-out;
+        transform: translate3d(0, 0, 0);
+        z-index: 1;
+    }
+    &:hover {
+        button {
+            transform: translate3d(-75px, 0, 0);
+        }
+        .filters-mask {
+            opacity: 0;
         }
     }
+}
+
+.filters-mask {
+    @include pt-sans(700);
+    @include font-size(18px);
+    cursor: pointer;
+    transition: opacity .25s ease-out;
+    padding-right: 15px;
+    padding-left: 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.btn-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding-left: 75px;
+}
+
+button {
+    @include font-size(16px);
+    @include pt-sans(700);
+    box-shadow: rgba($black, 0.8) 2px 2px 4px;
+    border: none;
+    padding: 0.25em 1em;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    background-color: $red;
+    cursor: pointer;
+    transition: background-color .1s ease-in, color .15s ease-in;
+    border-radius: 2px;
+    &:hover {
+        background-color: darken($red, 3%);
+        color: $white;
+    }
+}
+
+#go {
+    margin: .5em 0 0;
 }
 
 #drivers {
     display: flex;
     flex-wrap: wrap;
+    padding-bottom: 93px;
     li {
         flex: 1;
         display: flex;
@@ -40,7 +142,7 @@ strong {
         padding: 1em;
         min-width: 150px;
         margin: 1px;
-        transition: background-color .2s ease-out;
+        transition: background-color .2s ease-in;
         cursor: pointer;
         position: relative;
         &:hover {
@@ -57,15 +159,7 @@ strong {
 }
 
 .flag {
-    /* position: absolute;
-    top: .25em;
-    left: .25em;
-    width: 30px;
-    height: 20px;
-    background-repeat: no-repeat;
-    background-size: 30px auto;
-    background-position: 0 0; */
-    transition: opacity .2s ease-out;
+    transition: opacity .2s ease-in;
     position: absolute;
     top: 0;
     left: 0;
@@ -76,63 +170,4 @@ strong {
     background-position: 0 0;
     display: block;
     opacity: 0.15;
-}
-
-
-/* TODO: convert the units to REM */
-
-.barq-text-input {
-    border: 1px solid black;
-    display: inline-block;
-    min-width: 200px;
-    padding: .25em;
-}
-
-.barq-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #a8a8a8;
-    max-height: 210px;
-    background-color: white;
-    /* Default is bold, matches are regular */
-    font-weight: bold;
-    /* Avoid double borders with the input */
-    border-top: none;
-    /* Top and Left coords are controled by JS */
-    position: absolute;
-    /* Allow for scrolling and paginating */
-    overflow: auto;
-    /* Initially invisible, JS shows it */
-    display: none;
-    /* You might want to keep track of your z-indexes */
-    z-index: 666;
-}
-
-.barq-list li {
-    cursor: pointer;
-    font-size: 14px;
-    padding: .25em;
-    color: $black;
-}
-
-.barq-list li:hover {
-    background-color: #D1D1D1;
-}
-
-.barq-match {
-    font-weight: normal;
-    font-style: normal;
-}
-
-.barq-visible {
-    display: block;
-}
-
-.barq-hidden {
-    display: none;
-}
-
-.barq-active-item {
-    background-color: #44575B;
 }
